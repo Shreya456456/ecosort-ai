@@ -1,0 +1,10 @@
+{
+  "name": "ecosort-ai",
+  "version": "1.0.0",
+  "description": "Smart Waste Segregation Agent Webapp",
+  "main": "dev.js",
+  "scripts": {
+    "dev": "node dev.js"
+  },
+  "dependencies": {}
+}

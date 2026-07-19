@@ -1,0 +1,23 @@
+# AI Model file (too large for GitHub - 260MB)
+neubin_model.h5
+keys.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.env
+venv/
+.venv/
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

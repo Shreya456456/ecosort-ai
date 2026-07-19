@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoSort AI — Smart Waste Segregation Agent</title>
+  <meta name="description" content="AI-powered household waste segregation agent. Upload a photo to instantly classify waste and get proper disposal instructions." />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="20" fill="url(#logoGrad)"/>
+            <text x="20" y="27" text-anchor="middle" font-size="20" fill="white">♻</text>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#22c55e"/>
+                <stop offset="1" stop-color="#16a34a"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">EcoSort <span class="logo-ai">AI</span></span>
+      </div>
+      <nav class="nav">
+        <a href="#scan" class="nav-link active" id="nav-scan">Scan Waste</a>
+        <a href="#guide" class="nav-link" id="nav-guide">Guide</a>
+        <a href="#history" class="nav-link" id="nav-history">History</a>
+      </nav>
+      <div class="header-cta">
+        <span class="api-status" id="apiStatus">
+          <span class="status-dot"></span>
+          <span id="statusText">AI Ready</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- SCAN SECTION -->
+    <section class="section active" id="scan">
+      <div class="hero">
+        <h1 class="hero-title">Smart Waste<br /><span class="gradient-text">Segregation Agent</span></h1>
+        <p class="hero-desc">Upload or capture a photo of your household waste. Our AI will instantly classify it and guide you on proper disposal to help protect our environment.</p>
+
+        <!-- AI Model Selector -->
+        <div class="model-selector">
+          <label>AI Engine:</label>
+          <select id="modelSelect" class="api-input" style="width:auto; padding:0.5rem; margin-left:0.5rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:white; border-radius:6px;">
+            <option value="groq">☁️ Groq Llama 4 Vision (Cloud)</option>
+            <option value="neubin">🧠 NEU-Bin ResNet50 (Local)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- API Key Setup -->
+      <div class="card api-card" id="apiSetup">
+        <div class="card-icon">🔑</div>
+        <h3>Setup API Key</h3>
+        <p>Enter your Google Gemini API key to activate the AI agent. Your key is stored locally and never shared.</p>
+        <div class="input-group">
+          <input type="password" id="apiKeyInput" class="api-input" placeholder="Enter Gemini API Key (AIza...)" />
+          <button class="btn btn-primary" id="saveApiKey">Activate</button>
+        </div>
+        <p class="api-hint">Get your free API key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a></p>
+      </div>
+
+      <!-- Upload Zone -->
+      <div class="upload-container" id="uploadContainer">
+        <div class="upload-zone" id="uploadZone">
+          <div class="upload-icon">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="40" fill="rgba(34,197,94,0.1)"/>
+              <path d="M40 20v24M28 32l12-12 12 12" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M24 56h32a4 4 0 0 0 4-4V46" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M20 46v6a4 4 0 0 0 4 4" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="upload-title">Drop your waste photo here</h3>
+          <p class="upload-desc">or use one of the options below</p>
+          <div class="upload-actions">
+            <label class="btn btn-primary" for="fileInput" id="fileLabel">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload Photo
+            </label>
+            <button class="btn btn-secondary" id="cameraBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Use Camera
+            </button>
+          </div>
+          <input type="file" id="fileInput" accept="image/*" style="display:none" />
+        </div>
+
+        <!-- Camera View -->
+        <div class="camera-view" id="cameraView" style="display:none">
+          <video id="videoFeed" autoplay playsinline></video>
+          <div class="camera-overlay">
+            <div class="scan-frame"></div>
+          </div>
+          <div class="camera-controls">
+            <button class="btn btn-secondary" id="cancelCamera">Cancel</button>
+            <button class="btn btn-capture" id="captureBtn">
+              <span class="capture-ring"></span>
+            </button>
+            <button class="btn btn-secondary" id="flipCamera">Flip</button>
+          </div>
+          <canvas id="captureCanvas" style="display:none"></canvas>
+        </div>
+
+        <!-- Preview + Analyze -->
+        <div class="preview-container" id="previewContainer" style="display:none">
+          <div class="preview-image-wrap">
+            <img id="previewImage" alt="Waste preview" />
+            <button class="btn-remove" id="removeImage" title="Remove">✕</button>
+          </div>
+          <button class="btn btn-primary btn-analyze" id="analyzeBtn">
+            <span class="analyze-icon">🔍</span>
+            Analyze Waste
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div class="analyzing-state" id="analyzingState" style="display:none">
+        <div class="analyzing-animation">
+          <div class="scan-circle">
+            <div class="scan-pulse"></div>
+            <div class="scan-ring ring1"></div>
+            <div class="scan-ring ring2"></div>
+            <div class="scan-ring ring3"></div>
+            <div class="scan-icon">🤖</div>
+          </div>
+        </div>
+        <h3>AI Agent Analyzing...</h3>
+        <p id="analyzingStep">Identifying waste type</p>
+        <div class="progress-steps">
+          <div class="step active" id="step1">Scanning</div>
+          <div class="step" id="step2">Classifying</div>
+          <div class="step" id="step3">Guiding</div>
+        </div>
+      </div>
+
+      <!-- Result Card -->
+      <div class="result-section" id="resultSection" style="display:none">
+        <div class="result-card" id="resultCard">
+          <!-- dynamically filled -->
+        </div>
+        <div class="result-tips" id="resultTips">
+          <!-- dynamically filled -->
+        </div>
+        <button class="btn btn-secondary btn-scan-again" id="scanAgainBtn">
+          ↩ Scan Another Item
+        </button>
+      </div>
+    </section>
+
+    <!-- GUIDE SECTION -->
+    <section class="section" id="guide">
+      <div class="section-header">
+        <h2>Waste Segregation Guide</h2>
+        <p>Learn how to properly sort your household waste into the right categories</p>
+      </div>
+      <div class="guide-grid" id="guideGrid">
+        <!-- dynamically generated -->
+      </div>
+
+      <div class="section-header" style="margin-top:3rem">
+        <h2>Why Segregate?</h2>
+        <p>Proper waste segregation has a massive impact on our environment</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">75%</div>
+          <div class="stat-label">of waste is recyclable</div>
+          <div class="stat-desc">But only 30% actually gets recycled due to contamination</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">1 ton</div>
+          <div class="stat-label">paper = 17 trees saved</div>
+          <div class="stat-desc">Recycling paper saves trees, water & energy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">500 yrs</div>
+          <div class="stat-label">plastic decomposition</div>
+          <div class="stat-desc">Plastic takes centuries to break down in landfills</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">40%</div>
+          <div class="stat-label">less greenhouse gas</div>
+          <div class="stat-desc">Composting organic waste reduces methane emissions</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORY SECTION -->
+    <section class="section" id="history">
+      <div class="section-header">
+        <h2>Scan History</h2>
+        <p>Your waste classification history from this session</p>
+      </div>
+      <div class="history-summary" id="historySummary"></div>
+      <div class="history-list" id="historyList">
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <p>No scans yet. Start by analyzing some waste!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>EcoSort AI &mdash; Helping households make smarter waste decisions 🌍</p>
+    <p class="footer-sub">AI classifications are guidance only. Follow local municipal guidelines.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
