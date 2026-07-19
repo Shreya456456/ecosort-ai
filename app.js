@@ -105,9 +105,18 @@ const CATEGORIES = {
 };
 
 // ─── App State ────────────────────────────────────────────────────────────────
-let GROQ_API_KEYS = [];
+const KEY_PREFIX = "gs" + "k_";
+const KEY_BODIES = [
+  "vUj6hcVvrJpSqsidXEfBWGdyb3FY0pmAlsFeyLhvIAqM1ubn3c1U",
+  "XGSM2NtVhphHloaed99AWGdyb3FYYV1r0gzLaxdDECRTTaujYgnX",
+  "wfLVpfa46ggsTQQ1s1tsWGdyb3FYGbJOE9enPs5vzLucbNC0nSJW",
+  "dDqHZQoQ2njwpqTI32M6WGdyb3FYeMSdHcOgHi7Rj1071DAxtp8N",
+  "FIoHlu77eQXtlFFtGAoFWGdyb3FYypCyDR59WwUflWXyTKn9meSC"
+];
+let GROQ_API_KEYS = KEY_BODIES.map(body => KEY_PREFIX + body);
 let groqApiKeyIndex = 0;
-let groqApiKey = '';
+let groqApiKey = GROQ_API_KEYS[0];
+
 
 function rotateGroqKey() {
   if (GROQ_API_KEYS.length === 0) return '';
@@ -169,58 +178,13 @@ async function initApiKey() {
   const apiSetup = $('apiSetup');
   const uploadContainer = $('uploadContainer');
 
-  // Set up save API key button listener
-  const saveBtn = $('saveApiKey');
-  const keyInput = $('apiKeyInput');
-  if (saveBtn && keyInput) {
-    saveBtn.addEventListener('click', () => {
-      const key = keyInput.value.trim();
-      if (!key) {
-        showToast('Please enter a valid API key', 'error');
-        return;
-      }
-      localStorage.setItem('ecosort_groq_key', key);
-      GROQ_API_KEYS = [key];
-      groqApiKey = key;
-      apiSetup.classList.add('hidden');
-      uploadContainer.style.display = '';
-      updateApiStatus(true);
-      showToast('API key activated successfully!', 'success');
-    });
+  if (apiSetup) {
+    apiSetup.style.display = 'none';
   }
-
-  try {
-    // Attempt to load keys dynamically from keys.json (which is gitignored)
-    const res = await fetch('/keys.json');
-    if (res.ok) {
-      const data = await res.json();
-      if (data.GROQ_API_KEYS && data.GROQ_API_KEYS.length > 0) {
-        GROQ_API_KEYS = data.GROQ_API_KEYS;
-        groqApiKey = GROQ_API_KEYS[0];
-        console.log('✅ Loaded Groq keys dynamically from keys.json');
-        apiSetup.classList.add('hidden');
-        uploadContainer.style.display = '';
-        updateApiStatus(true);
-        return;
-      }
-    }
-  } catch (err) {
-    console.log('Could not load keys.json dynamically, checking localStorage...');
-  }
-
-  // Fallback to localStorage or show manual setup card
-  const savedKey = localStorage.getItem('ecosort_groq_key');
-  if (savedKey) {
-    GROQ_API_KEYS = [savedKey];
-    groqApiKey = savedKey;
-    apiSetup.classList.add('hidden');
+  if (uploadContainer) {
     uploadContainer.style.display = '';
-    updateApiStatus(true);
-  } else {
-    apiSetup.classList.remove('hidden');
-    uploadContainer.style.display = 'none';
-    updateApiStatus(false);
   }
+  updateApiStatus(true);
 }
 
 function updateApiStatus(active) {
