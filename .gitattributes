@@ -1,0 +1,9 @@
+# Tell GitHub's language detection to ignore backend/model files
+neubin_server.py linguist-detectable=false
+neubin_model.h5 linguist-detectable=false
+dev.js linguist-detectable=false
+
+# Mark these as the primary languages
+*.html linguist-detectable=true
+*.css linguist-detectable=true
+*.js linguist-detectable=true
